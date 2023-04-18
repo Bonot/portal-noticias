@@ -32,6 +32,13 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination
+                v-if="this.authors.length > 0"
+                :offset="this.offset"
+                :total="this.total"
+                :limit="this.limit"
+                @change-page="changePage"
+            />
         </div>
     </div>
   </div>
@@ -39,12 +46,19 @@
 
 <script>
 import axios from 'axios'
+import Pagination from '../../components/Pagination.vue';
 
 export default {
     name: 'authors',
+    components: {
+        Pagination,
+    },
     data() {
         return {
             authors: [],
+            offset: 0,
+            limit: 10,
+            total: 0,
         }
     },
     mounted(){
@@ -52,9 +66,10 @@ export default {
     },
     methods: {
         getAuthors() {
-            axios.get(`http://localhost:90/api/authors`)
+            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}`)
                 .then(response => {
                     this.authors = response.data.data;
+                    this.total = response.data.total;
                 });
         },
         deleteAuthor(authorId) {
@@ -65,6 +80,10 @@ export default {
                         location.reload();
                     });
             }
+        },
+        changePage(value) {
+            this.offset = value;
+            this.getAuthors();
         },
     }
 }
