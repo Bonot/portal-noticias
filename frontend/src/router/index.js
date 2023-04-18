@@ -4,6 +4,7 @@ import AuthorsView from '../views/Authors/View.vue'
 import AuthorsCreate from '../views/Authors/Create.vue'
 import AuthorsEdit from '../views/Authors/Edit.vue'
 import ArticlesView from '../views/Articles/View.vue'
+import ArticlesCreate from '../views/Articles/Create.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/noticias',
       name: 'articles',
       component: ArticlesView
+    },
+    {
+      path: '/noticias/novo',
+      name: 'articlesCreate',
+      component: ArticlesCreate
     },
   ]
 })
