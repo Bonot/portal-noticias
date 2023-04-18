@@ -11,11 +11,19 @@ class AuthorController extends Controller
 {
     public function index(Request $request)
     {
+        $query = Author::query();
+
         if ($request->has('name')) {
-            return Author::where('name', 'ilike', '%' . $request->name . '%')->get();
+            $query = $query->where('name', 'ilike', '%' . $request->name . '%');
         }
 
-        return Author::orderBy('name')->paginate(perPage: $request->size ?: 10);
+        $query = $query->orderBy('name');
+
+        if ((bool)$request->paginate) {
+            return $query->paginate(perPage: $request->size ?: 10);
+        }
+
+        return $query->get();
     }
 
     public function store(AuthorRequest $request)

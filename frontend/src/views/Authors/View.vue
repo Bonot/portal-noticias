@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         getAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}`)
+            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&paginate=true`)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;
