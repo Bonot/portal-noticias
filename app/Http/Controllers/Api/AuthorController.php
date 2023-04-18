@@ -38,8 +38,7 @@ class AuthorController extends Controller
 
     public function update(Author $author, AuthorRequest $request)
     {
-        $author->update($request->all());
-        return $author;
+        return response()->json($author->update($request->all()), 201);
     }
 
     public function destroy(Author $author)

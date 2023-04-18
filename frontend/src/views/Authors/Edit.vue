@@ -59,7 +59,7 @@ export default {
                         myThis.errorList = response.data.errors;
                     }
 
-                    if (response.status === 200) {
+                    if (response.status === 201) {
                         alert('Autor editado com sucesso');
                         window.location.href = '/autores';
                     }
