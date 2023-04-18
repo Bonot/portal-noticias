@@ -21,11 +21,7 @@
 
                 <div class="mb-3">
                     <label>Autor</label>
-                    <select v-model="model.article.author_id" class="form-select">
-                        <option value="0" selected>Selecione um autor</option>
-                        <option v-for="(author, index) in this.authors" :key="index"
-                            :value="author.id">{{author.name}}</option>
-                    </select>
+                    <author-select v-model="model.article.author_id" />
                 </div>
             <div class="mb-3">
                 <button type="button" @click="updateArticle" class="btn btn-primary">Salvar</button>
@@ -37,9 +33,13 @@
 
 <script>
 import axios from 'axios'
+import AuthorSelect from '../../components/AuthorSelect.vue';
 
 export default {
     name: 'articleCreate',
+    components: {
+        AuthorSelect,
+    },
     data(){
         return {
             errorList: '',
@@ -50,21 +50,13 @@ export default {
                     author_id: 0,
                 }
             },
-            authors: [],
         }
     },
     mounted(){
         this.articleId = this.$route.params.id;
         this.getArticlesData(this.articleId);
-        this.getAuthors();
     },
     methods: {
-        getAuthors() {
-            axios.get(`http://localhost:90/api/authors`)
-                .then(response => {
-                    this.authors = response.data;
-                });
-        },
         getArticlesData(articleId) {
             axios.get(`http://localhost:90/api/articles/${articleId}`)
             .then(response => {
