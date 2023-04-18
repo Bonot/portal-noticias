@@ -5,6 +5,7 @@ import AuthorsCreate from '../views/Authors/Create.vue'
 import AuthorsEdit from '../views/Authors/Edit.vue'
 import ArticlesView from '../views/Articles/View.vue'
 import ArticlesCreate from '../views/Articles/Create.vue'
+import ArticlesEdit from '../views/Articles/Edit.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/noticias/novo',
       name: 'articlesCreate',
       component: ArticlesCreate
+    },
+    {
+      path: '/noticias/:id/editar',
+      name: 'articlesEdit',
+      component: ArticlesEdit
     },
   ]
 })
