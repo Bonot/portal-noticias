@@ -11,7 +11,7 @@ class ArticleController extends Controller
 {
     public function index(Request $request)
     {
-        return Article::paginate(perPage: $request->size ?: 10);
+        return Article::with('author')->paginate(perPage: $request->size ?: 10);
     }
 
     public function store(ArticleRequest $request)
