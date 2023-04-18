@@ -16,7 +16,7 @@
                 </div>
                 <div class="mb-3">
                     <label>Conteúdo</label>
-                    <textarea v-model="model.article.content" class="form-control"></textarea>
+                    <html-text-editor  v-model:content="model.article.content" contentType="html"></html-text-editor>
                 </div>
 
                 <div class="mb-3">
@@ -34,11 +34,13 @@
 <script>
 import axios from 'axios'
 import AuthorSelect from '../../components/AuthorSelect.vue';
+import HtmlTextEditor from '../../components/HtmlTextEditor.vue';
 
 export default {
     name: 'articleCreate',
     components: {
         AuthorSelect,
+        HtmlTextEditor,
     },
     data(){
         return {
