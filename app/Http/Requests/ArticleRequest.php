@@ -54,8 +54,9 @@ class ArticleRequest extends FormRequest
         return [
             'title.required' => 'Informe um título.',
             'title.max' => 'O campo título deve ter no máximo 255 caracteres.',
-            'content.required' => 'Informe uma descrição',
-            'author_id.required' => 'Informe um autor',
+            'content.required' => 'Informe uma descrição.',
+            'author_id.required' => 'Informe um autor.',
+            'author_id.exists' => 'O autor selecionado é inválido.',
         ];
     }
 }
