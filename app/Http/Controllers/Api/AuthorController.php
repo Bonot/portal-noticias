@@ -15,7 +15,7 @@ class AuthorController extends Controller
             return Author::where('name', 'ilike', '%' . $request->name . '%')->get();
         }
 
-        return Author::paginate(perPage: $request->size ?: 10);
+        return Author::orderBy('name')->paginate(perPage: $request->size ?: 10);
     }
 
     public function store(AuthorRequest $request)
