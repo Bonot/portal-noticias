@@ -8,6 +8,13 @@
             </h4>
         </div>
         <div class="card-body">
+            <nav class="navbar bg-body-tertiary">
+                <form class="d-flex" role="filter">
+                <input class="form-control me-2" v-model="searchInput.query" type="search" placeholder="Buscar notícia" aria-label="Search">
+                <author-select v-model="searchInput.author_id" />
+                <button type="button" class="btn btn-outline-success" @click="filterArticles()">Filtrar</button>
+                </form>
+            </nav>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -53,15 +60,21 @@
 <script>
 import axios from 'axios'
 import Pagination from '../../components/Pagination.vue';
+import AuthorSelect from '../../components/AuthorSelect.vue';
 
 export default {
     name: 'articles',
     components: {
         Pagination,
+        AuthorSelect,
     },
     data() {
         return {
             articles: [],
+            searchInput: {
+                query: '',
+                author_id: 0,
+            },
             offset: 0,
             limit: 10,
             total: 0,
@@ -72,7 +85,7 @@ export default {
     },
     methods: {
         getArticles() {
-            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}`)
+            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}&paginate=true`)
                 .then(response => {
                     this.articles = response.data.data;
                     this.total = response.data.total;
@@ -96,7 +109,14 @@ export default {
                 const date = new Date(dateString);
                 return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
             }
-        }
+        },
+        filterArticles() {
+            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`)
+                .then(response => {
+                    this.articles = response.data.data;
+                    this.total = response.data.total;
+                });
+        },
     }
 }
 </script>
