@@ -75,7 +75,7 @@ export default {
     },
     methods: {
         getAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&paginate=true`)
+            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}`)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;
@@ -100,7 +100,7 @@ export default {
             this.getAuthors();
         },
         filterAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&paginate=true&name=${this.searchInput.name}`)
+            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&name=${this.searchInput.name}`)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;

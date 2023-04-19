@@ -26,7 +26,7 @@
                         <th class="text-end">Ações</th>
                     </tr>
                 </thead>
-                <tbody v-if="this.articles.length > 0">
+                <tbody v-if="this.total > 0">
                     <tr v-for="(article, index) in this.articles" :key="index">
                         <td>{{ article.id }}</td>
                         <td>{{ article.title }}</td>
@@ -85,7 +85,7 @@ export default {
     },
     methods: {
         getArticles() {
-            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}&paginate=true`)
+            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}`)
                 .then(response => {
                     this.articles = response.data.data;
                     this.total = response.data.total;
