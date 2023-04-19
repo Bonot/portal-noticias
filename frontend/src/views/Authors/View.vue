@@ -8,6 +8,12 @@
             </h4>
         </div>
         <div class="card-body">
+            <nav class="navbar bg-body-tertiary">
+                <form class="d-flex" role="filter">
+                <input class="form-control me-2" v-model="searchInput.name" type="search" placeholder="Buscar autor" aria-label="Search">
+                <button type="button" class="btn btn-outline-success" @click="filterAuthors()">Filtrar</button>
+                </form>
+            </nav>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -56,6 +62,9 @@ export default {
     data() {
         return {
             authors: [],
+            searchInput: {
+                name: '',
+            },
             offset: 0,
             limit: 10,
             total: 0,
@@ -84,6 +93,13 @@ export default {
         changePage(value) {
             this.offset = value;
             this.getAuthors();
+        },
+        filterAuthors() {
+            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&paginate=true&name=${this.searchInput.name}`)
+                .then(response => {
+                    this.authors = response.data.data;
+                    this.total = response.data.total;
+                });
         },
     }
 }
