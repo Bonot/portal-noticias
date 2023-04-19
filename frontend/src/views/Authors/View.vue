@@ -85,8 +85,13 @@ export default {
             if (confirm('Você tem certeza que gostaria de excluir esse registro?')) {
                 axios.delete(`http://localhost:90/api/authors/${authorId}`)
                     .then(response => {
-                        alert('Registro removido com sucesso');
-                        location.reload();
+                        if (response.data.success === false)
+                        {
+                            alert(response.data.message);
+                        } else {
+                            alert('Registro removido com sucesso');
+                            location.reload();
+                        }
                     });
             }
         },
