@@ -16,7 +16,7 @@
                 </div>
                 <div class="mb-3">
                     <label>Conteúdo</label>
-                    <html-text-editor  v-model:content="model.article.content" contentType="html"></html-text-editor>
+                    <html-text-editor v-if="model.article.content" v-model:content="model.article.content" contentType="html"></html-text-editor>
                 </div>
 
                 <div class="mb-3">
