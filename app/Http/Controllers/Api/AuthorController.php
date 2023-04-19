@@ -18,6 +18,13 @@ class AuthorController extends Controller
                 ->paginate(perPage: $request->size ?: 10);
     }
 
+    public function getResource()
+    {
+        return Author::query()
+            ->orderBy('name')
+            ->get();
+    }
+
     public function store(AuthorRequest $request)
     {
         return response()->json(Author::create($request->all()), 201);

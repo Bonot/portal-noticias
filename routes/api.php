@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthorController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('authors/resource', [AuthorController::class, 'getResource']);
 Route::apiResource('/authors', AuthorController::class);
 
 Route::apiResource('/articles', ArticleController::class);
