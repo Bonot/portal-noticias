@@ -21,37 +21,44 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      beforeEnter: authorization
     },
     {
       path: '/autores',
       name: 'authors',
-      component: AuthorsView
+      component: AuthorsView,
+      beforeEnter: authorization
     },
     {
       path: '/autores/novo',
       name: 'authorsCreate',
-      component: AuthorsCreate
+      component: AuthorsCreate,
+      beforeEnter: authorization
     },
     {
       path: '/autores/:id/editar',
       name: 'authorsEdit',
-      component: AuthorsEdit
+      component: AuthorsEdit,
+      beforeEnter: authorization
     },
     {
       path: '/noticias',
       name: 'articles',
-      component: ArticlesView
+      component: ArticlesView,
+      beforeEnter: authorization
     },
     {
       path: '/noticias/novo',
       name: 'articlesCreate',
-      component: ArticlesCreate
+      component: ArticlesCreate,
+      beforeEnter: authorization
     },
     {
       path: '/noticias/:id/editar',
       name: 'articlesEdit',
-      component: ArticlesEdit
+      component: ArticlesEdit,
+      beforeEnter: authorization
     },
   ]
 })
