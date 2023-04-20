@@ -7,17 +7,16 @@ use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class ArticleController extends Controller
 {
     public function index(Request $request)
     {
         return Article::search($request->get('query'))
-            ->when($request->get('author_id'), function($query) use ($request){
+            ->when($request->get('author_id'), function ($query) use ($request) {
                 $query->where('author_id', $request->get('author_id'));
             })
-            ->query(fn(Builder $query) => $query->with('author'))
+            ->query(fn (Builder $query) => $query->with('author'))
             ->orderBy('updated_at', 'DESC')
             ->paginate(perPage: $request->size ?: 10);
     }
