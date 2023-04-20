@@ -57,7 +57,10 @@ export default {
                 this.model.author = response.data;
             })
             .catch(function (error) {
-                console.log(error.response.status)
+                if (error.response.status === 404) {
+                    alert('Autor não encontrado')
+                    window.location.href = '/autores';
+                }
             })
         },
         updateAuthor() {

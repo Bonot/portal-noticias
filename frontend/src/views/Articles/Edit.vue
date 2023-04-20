@@ -73,6 +73,12 @@ export default {
             .then(response => {
                 this.model.article = response.data;
             })
+            .catch(function (error) {
+                if (error.response.status === 404) {
+                    alert('Notícia não encontrada')
+                    window.location.href = '/noticias';
+                }
+            })
         },
         updateArticle() {
             var myThis = this;
