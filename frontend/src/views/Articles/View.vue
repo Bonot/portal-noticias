@@ -12,7 +12,7 @@
                 <form class="d-flex" role="filter">
                 <input class="form-control me-2" v-model="searchInput.query" type="search" placeholder="Buscar notícia" aria-label="Search">
                 <author-select v-model="searchInput.author_id" />
-                <button type="button" class="btn btn-outline-success" @click="filterArticles()">Filtrar</button>
+                <button type="button" class="btn btn-outline-success" @click="getArticles()">Filtrar</button>
                 </form>
             </nav>
             <table class="table table-striped">
@@ -94,7 +94,7 @@ export default {
     },
     methods: {
         getArticles() {
-            axios.get(`/api/articles?page=${this.offset}&size=${this.limit}`, this.config)
+            axios.get(`/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`, this.config)
                 .then(response => {
                     this.articles = response.data.data;
                     this.total = response.data.total;
@@ -118,13 +118,6 @@ export default {
                 const date = new Date(dateString);
                 return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
             }
-        },
-        filterArticles() {
-            axios.get(`/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`, this.config)
-                .then(response => {
-                    this.articles = response.data.data;
-                    this.total = response.data.total;
-                });
         },
     }
 }

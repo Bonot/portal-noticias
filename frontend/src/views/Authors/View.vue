@@ -11,7 +11,7 @@
             <nav class="navbar bg-body-tertiary">
                 <form class="d-flex" role="filter">
                 <input class="form-control me-2" v-model="searchInput.name" type="search" placeholder="Buscar autor" aria-label="Search">
-                <button type="button" class="btn btn-outline-success" @click="filterAuthors()">Filtrar</button>
+                <button type="button" class="btn btn-outline-success" @click="getAuthors()">Filtrar</button>
                 </form>
             </nav>
             <table class="table table-striped">
@@ -84,7 +84,7 @@ export default {
     },
     methods: {
         getAuthors() {
-            axios.get(`/api/authors?page=${this.offset}&size=${this.limit}`, this.config)
+            axios.get(`/api/authors?page=${this.offset}&size=${this.limit}&name=${this.searchInput.name}`, this.config)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;
@@ -107,13 +107,6 @@ export default {
         changePage(value) {
             this.offset = value;
             this.getAuthors();
-        },
-        filterAuthors() {
-            axios.get(`/api/authors?page=${this.offset}&size=${this.limit}&name=${this.searchInput.name}`, this.config)
-                .then(response => {
-                    this.authors = response.data.data;
-                    this.total = response.data.total;
-                });
         },
     }
 }
