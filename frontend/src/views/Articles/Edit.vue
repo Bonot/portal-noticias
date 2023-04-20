@@ -35,6 +35,7 @@
 import axios from 'axios'
 import AuthorSelect from '../../components/AuthorSelect.vue';
 import HtmlTextEditor from '../../components/HtmlTextEditor.vue';
+import Cookie from 'js-cookie'
 
 export default {
     name: 'articleCreate',
@@ -52,24 +53,31 @@ export default {
                     author_id: 0,
                 }
             },
+            token : '',
+            config : {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: {
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.articleId = this.$route.params.id;
         this.getArticlesData(this.articleId);
     },
     methods: {
         getArticlesData(articleId) {
-            axios.get(`http://localhost:90/api/articles/${articleId}`)
+            axios.get(`/api/articles/${articleId}`, this.config)
             .then(response => {
                 this.model.article = response.data;
             })
         },
         updateArticle() {
             var myThis = this;
-            axios.put(`http://localhost:90/api/articles/${this.articleId}`, this.model.article)
+            axios.put(`/api/articles/${this.articleId}`, this.model.article, this.config)
                 .then(response => {
-                    console.log(response);
                     if (response.data.success === false) {
                         myThis.errorList = response.data.errors;
                     }

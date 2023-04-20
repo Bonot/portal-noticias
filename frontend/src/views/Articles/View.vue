@@ -61,6 +61,7 @@
 import axios from 'axios'
 import Pagination from '../../components/Pagination.vue';
 import AuthorSelect from '../../components/AuthorSelect.vue';
+import Cookie from 'js-cookie'
 
 export default {
     name: 'articles',
@@ -78,14 +79,22 @@ export default {
             offset: 0,
             limit: 10,
             total: 0,
+            token : '',
+            config : {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.getArticles();
     },
     methods: {
         getArticles() {
-            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}`)
+            axios.get(`/api/articles?page=${this.offset}&size=${this.limit}`, this.config)
                 .then(response => {
                     this.articles = response.data.data;
                     this.total = response.data.total;
@@ -93,7 +102,7 @@ export default {
         },
         deleteArticle(articleId) {
             if (confirm('Você tem certeza que gostaria de excluir esse registro?')) {
-                axios.delete(`http://localhost:90/api/articles/${articleId}`)
+                axios.delete(`/api/articles/${articleId}`, this.config)
                     .then(response => {
                         alert('Registro removido com sucesso');
                         location.reload();
@@ -111,7 +120,7 @@ export default {
             }
         },
         filterArticles() {
-            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`)
+            axios.get(`/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`, this.config)
                 .then(response => {
                     this.articles = response.data.data;
                     this.total = response.data.total;
