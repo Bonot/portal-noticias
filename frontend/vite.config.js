@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+const baseUrl = 'http://localhost:90'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
@@ -13,7 +14,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api/login': 'http://localhost:90'
+      '/api/login': baseUrl,
+      '/api/authors': baseUrl,
+      '/api/articles': baseUrl,
     }
   }
 })
