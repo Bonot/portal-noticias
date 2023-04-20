@@ -4,18 +4,28 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthorRequest;
+use App\Models\Article;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthorController extends Controller
 {
     public function index(Request $request)
     {
+        $query = Author::query();
+
         if ($request->has('name')) {
-            return Author::where('name', 'ilike', '%' . $request->name . '%')->get();
+            $query = $query->where('name', 'ilike', '%' . $request->name . '%');
         }
 
-        return Author::paginate(perPage: $request->size ?: 10);
+        $query = $query->orderBy('name');
+
+        if ((bool)$request->paginate) {
+            return $query->paginate(perPage: $request->size ?: 10);
+        }
+
+        return $query->get();
     }
 
     public function store(AuthorRequest $request)
@@ -30,12 +40,21 @@ class AuthorController extends Controller
 
     public function update(Author $author, AuthorRequest $request)
     {
-        $author->update($request->all());
-        return $author;
+        return response()->json($author->update($request->all()), 201);
     }
 
     public function destroy(Author $author)
     {
+        $hasArticleForThisAuthor = Article::where('author_id', $author->id)->exists();
+
+        if ($hasArticleForThisAuthor) {
+            return response()->json([
+                'success' => false,
+                'status' => Response::HTTP_CONFLICT,
+                'message' => 'Não foi possível remover autor. Existem notícias vínculadas a ele.'
+            ]);
+        }
+    
         $author->delete();
         return response()->noContent();
     }
