@@ -9,19 +9,11 @@ use Illuminate\Http\Response;
 
 class AuthorRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
     public function rules(): array
     {
         return [
@@ -34,11 +26,14 @@ class AuthorRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'errors' => $validator->errors()
-        ]));
+        throw new HttpResponseException(
+            response()
+            ->json([
+                'success' => false,
+                'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'errors' => $validator->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY)
+        );
     }
 
     public function messages()

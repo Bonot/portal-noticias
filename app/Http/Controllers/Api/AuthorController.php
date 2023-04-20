@@ -49,7 +49,7 @@ class AuthorController extends Controller
                 'success' => false,
                 'status' => Response::HTTP_CONFLICT,
                 'message' => 'Não foi possível remover autor. Existem notícias vínculadas a ele.'
-            ]);
+            ], Response::HTTP_CONFLICT);
         }
 
         $author->delete();

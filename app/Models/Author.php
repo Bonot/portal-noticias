@@ -19,6 +19,12 @@ class Author extends Model implements Auditable
         'name'
     ];
 
+    protected $casts = [
+        'created_at' => 'date',
+        'updated_at' => 'date',
+        'deleted_at' => 'date',
+    ];
+
     public function toSearchableArray(): array
     {
         return ['name' => $this->name];
