@@ -13,19 +13,16 @@ class AuthorController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Author::query();
+        return Author::search($request->get('name'))
+                ->orderBy('name')
+                ->paginate(perPage: $request->size ?: 10);
+    }
 
-        if ($request->has('name')) {
-            $query = $query->where('name', 'ilike', '%' . $request->name . '%');
-        }
-
-        $query = $query->orderBy('name');
-
-        if ((bool)$request->paginate) {
-            return $query->paginate(perPage: $request->size ?: 10);
-        }
-
-        return $query->get();
+    public function getResource()
+    {
+        return Author::query()
+            ->orderBy('name')
+            ->get();
     }
 
     public function store(AuthorRequest $request)
@@ -54,7 +51,7 @@ class AuthorController extends Controller
                 'message' => 'Não foi possível remover autor. Existem notícias vínculadas a ele.'
             ]);
         }
-    
+
         $author->delete();
         return response()->noContent();
     }

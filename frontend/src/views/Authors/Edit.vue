@@ -24,6 +24,7 @@
 
 <script>
 import axios from 'axios'
+import Cookie from 'js-cookie'
 
 export default {
     name: 'authorEdit',
@@ -34,26 +35,37 @@ export default {
                 author: {
                     name: '',
                 }
-            }
+            },
+            token: '',
+            config: {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.authorId = this.$route.params.id;
         this.getAuthorData(this.authorId);
     },
     methods: {
         getAuthorData(authorId) {
-            axios.get(`http://localhost:90/api/authors/${authorId}`)
+            axios.get(`/api/authors/${authorId}`, this.config)
             .then(response => {
                 this.model.author = response.data;
             })
             .catch(function (error) {
-                console.log(error.response.status)
+                if (error.response.status === 404) {
+                    alert('Autor não encontrado')
+                    window.location.href = '/autores';
+                }
             })
         },
         updateAuthor() {
             var myThis = this;
-            axios.put(`http://localhost:90/api/authors/${this.authorId}`, this.model.author)
+            axios.put(`/api/authors/${this.authorId}`, this.model.author, this.config)
                 .then(response => {
                     if (response.data.success === false) {
                         myThis.errorList = response.data.errors;

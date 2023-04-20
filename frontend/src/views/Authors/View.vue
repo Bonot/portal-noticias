@@ -11,7 +11,7 @@
             <nav class="navbar bg-body-tertiary">
                 <form class="d-flex" role="filter">
                 <input class="form-control me-2" v-model="searchInput.name" type="search" placeholder="Buscar autor" aria-label="Search">
-                <button type="button" class="btn btn-outline-success" @click="filterAuthors()">Filtrar</button>
+                <button type="button" class="btn btn-outline-success" @click="getAuthors()">Filtrar</button>
                 </form>
             </nav>
             <table class="table table-striped">
@@ -53,6 +53,7 @@
 <script>
 import axios from 'axios'
 import Pagination from '../../components/Pagination.vue';
+import Cookie from 'js-cookie'
 
 export default {
     name: 'authors',
@@ -68,14 +69,22 @@ export default {
             offset: 0,
             limit: 10,
             total: 0,
+            token : '',
+            config : {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.getAuthors();
     },
     methods: {
         getAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&paginate=true`)
+            axios.get(`/api/authors?page=${this.offset}&size=${this.limit}&name=${this.searchInput.name}`, this.config)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;
@@ -83,7 +92,7 @@ export default {
         },
         deleteAuthor(authorId) {
             if (confirm('Você tem certeza que gostaria de excluir esse registro?')) {
-                axios.delete(`http://localhost:90/api/authors/${authorId}`)
+                axios.delete(`/api/authors/${authorId}`, this.config)
                     .then(response => {
                         if (response.data.success === false)
                         {
@@ -98,13 +107,6 @@ export default {
         changePage(value) {
             this.offset = value;
             this.getAuthors();
-        },
-        filterAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&paginate=true&name=${this.searchInput.name}`)
-                .then(response => {
-                    this.authors = response.data.data;
-                    this.total = response.data.total;
-                });
         },
     }
 }

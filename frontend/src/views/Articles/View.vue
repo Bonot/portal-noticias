@@ -12,7 +12,7 @@
                 <form class="d-flex" role="filter">
                 <input class="form-control me-2" v-model="searchInput.query" type="search" placeholder="Buscar notícia" aria-label="Search">
                 <author-select v-model="searchInput.author_id" />
-                <button type="button" class="btn btn-outline-success" @click="filterArticles()">Filtrar</button>
+                <button type="button" class="btn btn-outline-success" @click="getArticles()">Filtrar</button>
                 </form>
             </nav>
             <table class="table table-striped">
@@ -26,7 +26,7 @@
                         <th class="text-end">Ações</th>
                     </tr>
                 </thead>
-                <tbody v-if="this.articles.length > 0">
+                <tbody v-if="this.total > 0">
                     <tr v-for="(article, index) in this.articles" :key="index">
                         <td>{{ article.id }}</td>
                         <td>{{ article.title }}</td>
@@ -61,6 +61,7 @@
 import axios from 'axios'
 import Pagination from '../../components/Pagination.vue';
 import AuthorSelect from '../../components/AuthorSelect.vue';
+import Cookie from 'js-cookie'
 
 export default {
     name: 'articles',
@@ -78,14 +79,22 @@ export default {
             offset: 0,
             limit: 10,
             total: 0,
+            token : '',
+            config : {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.getArticles();
     },
     methods: {
         getArticles() {
-            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}&paginate=true`)
+            axios.get(`/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`, this.config)
                 .then(response => {
                     this.articles = response.data.data;
                     this.total = response.data.total;
@@ -93,7 +102,7 @@ export default {
         },
         deleteArticle(articleId) {
             if (confirm('Você tem certeza que gostaria de excluir esse registro?')) {
-                axios.delete(`http://localhost:90/api/articles/${articleId}`)
+                axios.delete(`/api/articles/${articleId}`, this.config)
                     .then(response => {
                         alert('Registro removido com sucesso');
                         location.reload();
@@ -109,13 +118,6 @@ export default {
                 const date = new Date(dateString);
                 return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
             }
-        },
-        filterArticles() {
-            axios.get(`http://localhost:90/api/articles?page=${this.offset}&size=${this.limit}&paginate=true&query=${this.searchInput.query}&author_id=${this.searchInput.author_id}`)
-                .then(response => {
-                    this.articles = response.data.data;
-                    this.total = response.data.total;
-                });
         },
     }
 }

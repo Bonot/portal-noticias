@@ -24,6 +24,7 @@
 
 <script>
 import axios from 'axios'
+import Cookie from 'js-cookie'
 
 export default {
     name: 'authorCreate',
@@ -34,13 +35,23 @@ export default {
                 author: {
                     name: '',
                 }
+            },
+            token: '',
+            config: {}
+        }
+    },
+    mounted() {
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
             }
         }
     },
     methods: {
         saveAuthor() {
             var myThis = this;
-            axios.post('http://localhost:90/api/authors', this.model.author)
+            axios.post('/api/authors', this.model.author, this.config)
                 .then(response => {
                     if (response.data.success === false) {
                         myThis.errorList = response.data.errors;
