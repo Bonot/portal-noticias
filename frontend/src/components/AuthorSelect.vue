@@ -11,6 +11,7 @@
 
 <script>
 import axios from 'axios'
+import Cookie from 'js-cookie'
 
 export default {
     name: 'authorSelect',
@@ -19,14 +20,22 @@ export default {
     data(){
         return {
             authors: [],
+            token: '',
+            config: {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.getAuthors();
     },
     methods: {
         getAuthors() {
-            axios.get(`http://localhost:90/api/authors/resource`)
+            axios.get(`/api/authors/resource`, this.config)
                 .then(response => {
                     this.authors = response.data;
                 });
