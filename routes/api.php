@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthorController;
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,15 +29,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/articles', ArticleController::class);
 });
 
-Route::post('/login', function (LoginRequest $request) {
-    $credentials = $request->only(['email', 'password']);
-
-    if (Auth::attempt($credentials) === false) {
-        return response()->json('Unauthorized', 401);
-    }
-
-    $user = Auth::user();
-    $token = $user->createToken(name: 'token');
-
-    return response()->json($token->plainTextToken);
-});
+Route::post('/login', LoginController::class);
