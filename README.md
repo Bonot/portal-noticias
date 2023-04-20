@@ -48,3 +48,5 @@ Senha: admin123
 ```
 
 A API roda em `http://localhost:90/`
+
+Para acessar o frontend usar url geral pelo 
