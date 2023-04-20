@@ -53,6 +53,7 @@
 <script>
 import axios from 'axios'
 import Pagination from '../../components/Pagination.vue';
+import Cookie from 'js-cookie'
 
 export default {
     name: 'authors',
@@ -68,14 +69,22 @@ export default {
             offset: 0,
             limit: 10,
             total: 0,
+            token : '',
+            config : {}
         }
     },
     mounted(){
+        this.token = Cookie.get('token')
+        this.config = {
+            headers: { 
+                Authorization: `Bearer ${this.token}`
+            }
+        }
         this.getAuthors();
     },
     methods: {
         getAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}`)
+            axios.get(`/api/authors?page=${this.offset}&size=${this.limit}`, this.config)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;
@@ -83,7 +92,7 @@ export default {
         },
         deleteAuthor(authorId) {
             if (confirm('Você tem certeza que gostaria de excluir esse registro?')) {
-                axios.delete(`http://localhost:90/api/authors/${authorId}`)
+                axios.delete(`/api/authors/${authorId}`, this.config)
                     .then(response => {
                         if (response.data.success === false)
                         {
@@ -100,7 +109,7 @@ export default {
             this.getAuthors();
         },
         filterAuthors() {
-            axios.get(`http://localhost:90/api/authors?page=${this.offset}&size=${this.limit}&name=${this.searchInput.name}`)
+            axios.get(`/api/authors?page=${this.offset}&size=${this.limit}&name=${this.searchInput.name}`, this.config)
                 .then(response => {
                     this.authors = response.data.data;
                     this.total = response.data.total;
