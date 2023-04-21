@@ -82,7 +82,17 @@ export default {
         },
         updateArticle() {
             var myThis = this;
-            axios.put(`/api/articles/${this.articleId}`, this.model.article, this.config)
+            var regex = /(<([^>]+)>)/ig
+            let body = this.model.article.content
+            let hasText = !!body.replace(regex, "").length;
+            
+            let article = {
+                'title': this.model.article.title,
+                'content': hasText ? this.model.article.content : '',
+                'author_id': this.model.article.author_id
+            }
+
+            axios.put(`/api/articles/${this.articleId}`, article, this.config)
                 .then(response => {
                     if (response.data.success === false) {
                         myThis.errorList = response.data.errors;

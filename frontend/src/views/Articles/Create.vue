@@ -68,7 +68,17 @@ export default {
     methods: {
         saveArticle() {
             var myThis = this;
-            axios.post('/api/articles', this.model.article, this.config)
+                        var regex = /(<([^>]+)>)/ig
+            let body = this.model.article.content
+            let hasText = !!body.replace(regex, "").length;
+            
+            let article = {
+                'title': this.model.article.title,
+                'content': hasText ? this.model.article.content : '',
+                'author_id': this.model.article.author_id
+            }
+
+            axios.post('/api/articles', article, this.config)
                 .then(response => {
                     if (response.data.success === false) {
                         myThis.errorList = response.data.errors;
