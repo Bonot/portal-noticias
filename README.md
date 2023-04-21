@@ -50,3 +50,15 @@ Senha: admin123
 A API roda em `http://localhost:90/`
 
 Para acessar o frontend usar url geral pelo 
+
+----
+
+### Executando testes
+
+Para executar os testes:
+
+- Criar arquivo `.env.test` a partir de `.env`;
+  - Alterar `DB_DATABASE` para `portal_noticias_teste`;
+- Criar banco de dados `portal_noticias_teste` manualmente;
+- Rodar comando `vendor/bin/sail php artisan migrate --env=test`;
+- Para executar os testes, rodar o comando `vendor/bin/sail php artisan test`;
